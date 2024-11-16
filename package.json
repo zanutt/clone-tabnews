@@ -4,6 +4,8 @@
   "description": "Prejeto de Estudo curso.dev",
   "main": "index.js",
   "scripts": {
+    "start": "next start",
+    "build": "next build",
     "dev": "next dev"
   },
   "author": "",
