@@ -18,8 +18,7 @@ async function waitForAllServices() {
   }
 }
 
-const orchestrator =
-{
+const orchestrator = {
   waitForAllServices,
 };
 
