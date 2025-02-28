@@ -5,7 +5,7 @@ import database from "infra/database.js";
 export default async function migrations(request, response) {
   const allowedMethods = ["GET", "POST"];
   if (!allowedMethods.includes(request.method)) {
-    return response.status(405).end({
+    return response.status(405).json({
       error: `Method "${request.method}" not allowed`,
     });
   }
@@ -24,17 +24,18 @@ export default async function migrations(request, response) {
 
     if (request.method === "GET") {
       const pendingMigrations = await migrationRunner(defaultMigrationOptions);
-
       return response.status(200).json(pendingMigrations);
     }
 
     if (request.method === "POST") {
+      const pendingMigrations = await migrationRunner(defaultMigrationOptions);
+
       const migratedMigrations = await migrationRunner({
         ...defaultMigrationOptions,
         dryRun: false,
       });
 
-      if (migratedMigrations.length > 0) {
+      if (pendingMigrations.length > 0) {
         return response.status(201).json(migratedMigrations);
       }
 
@@ -42,8 +43,10 @@ export default async function migrations(request, response) {
     }
   } catch (error) {
     console.error(error);
-    throw error;
+    return response.status(500).json({ error: "Internal server error" });
   } finally {
-    await dbClient.end();
+    if (dbClient) {
+      await dbClient.end();
+    }
   }
 }
