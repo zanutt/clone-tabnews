@@ -24,7 +24,7 @@ exports.up = (pgm) => {
       type: "timestamptz",
       default: pgm.func("now()"),
     },
-    updtate_at: {
+    updated_at: {
       type: "timestamptz",
       default: pgm.func("now()"),
     },
